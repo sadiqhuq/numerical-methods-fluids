@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 
 def explicit_conv_1d ( phi, dt, U0, npoints, phinew ):
     # # Periodic BC at x = 0
-    phinew[0] = phi[0];
-    # phinew[0] = phi[-1];
-    # phinew[0] = phi[0];
+    phinew[0] = phi[-1];
 
     # # Loop over points in space
     # for j  in range (1, npoints):
@@ -14,9 +12,8 @@ def explicit_conv_1d ( phi, dt, U0, npoints, phinew ):
         phinew[j] = phi[j] - ( U0*dt/2./dx ) * ( phi[j+1] - phi[j-1] )
 
     # # Periodic BC at x = 2 pi
-    phinew[-1] =  phi[-1] 
-    # phinew[-1] =  phi[0] 
-    # phinew[-1] =  phi[-1] 
+    phinew[-1] =  phi[0] 
+
     return phinew
 
 def conv_analytical_1d ( t, npoints, phi_a ):
