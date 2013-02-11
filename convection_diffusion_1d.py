@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # # Steady 1D convection-diffusion equation
-# # -U0 dphi/dx + Gamma d^2 phi/ dx^2 = 0
+# #       d phi          d^2 phi
+# #  -U0 ------- + Gamma ------- = 0
+# #        dx             dx^2
 # # phi (x = 0) = 0; phi ( x = 2pi) = 0
 
 # # Play with the values of U0 and Gamma 
@@ -47,9 +49,9 @@ x       = np.linspace (0.0, xend, npoints)
 # #  Initialize
 phi     = np.zeros(npoints)           # # vector field phi
 b       = np.zeros(npoints)           # # vector b
-A       = np.zeros((npoints,npoints)) # # matrix A upwind
-B       = np.zeros((npoints,npoints)) # # matrix B downwind
-C       = np.zeros((npoints,npoints)) # # matrix C central
+A       = np.zeros((npoints,npoints)) # # co-eff matrix A upwind  
+B       = np.zeros((npoints,npoints)) # # co-eff matrix B downwind
+C       = np.zeros((npoints,npoints)) # # co-eff matrix C central
 
 # #  Boundary condition
 phi_0   = 0.0
