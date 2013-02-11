@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 def explicit_conv_1d ( phi, dt, U0, npoints, phinew ):
     # # Periodic BC at x = 0
-    phinew[0] = phi[-1];
+    phinew[0] = phi[-1]
 
     # # Loop over points in space
     # for j  in range (1, npoints):
@@ -24,7 +24,7 @@ def explicit_conv_1d ( phi, dt, U0, npoints, phinew ):
 
     return phinew
 
-def implicit_conv_1d ( phi, A, b, dt, dx, U0, npoints, phinew ):
+def implicit_conv_1d ( phi_imp, A, b, dt, dx, U0, npoints ):
     
     a_w = -U0*dt/2./dx
     a_p = 1
@@ -35,19 +35,19 @@ def implicit_conv_1d ( phi, A, b, dt, dx, U0, npoints, phinew ):
     A[0, 0]        = a_p
     A[0, 1]        = a_e
     
-    b[0]           = phi[0]
+    b[0]           = phi_imp[0]
 
     for j in range ( 1 , npoints - 1):
         A[j,j-1]   = a_w
         A[j,j]     = a_p
         A[j,j+1]   = a_e
-        b[j]       = phi[j] 
+        b[j]       = phi_imp[j] 
 
     # #  Periodic BC at x=2*pi
     A[-1,1]        = a_e
     A[-1,-1]       = a_p
     A[-1,-2]       = a_w
-    b[-1]          = phi [-1]
+    b[-1]          = phi_imp[-1]
 
     # #  Solve the linear system of equations
     phinew,resid,rank,s = np.linalg.lstsq(A,b)   # # A\b
@@ -85,11 +85,11 @@ for i in range(0,tsteps+1):
 
   phinew = explicit_conv_1d ( phi, dt, U0, npoints, phinew )
   # # Write new phi to old phi
-  phi = phinew
+  phi = phinew.copy()
   
   phi_a = conv_analytical_1d (i*dt, npoints, phi_a, 'sine' )
 
-phi_exp = phi.copy()
+phi_exp = phinew.copy()
 
 # # Implicit Euler:
 
@@ -99,11 +99,9 @@ A       = np.zeros((npoints+1,npoints+1))  # coefficient matrix A
 b       = np.zeros(npoints+1)              # constant vector b
 
 phi_imp = phi0.copy()
-phi     = phi0.copy()
 
 for i in range(0,tsteps+1):
-    phi_imp =  implicit_conv_1d ( phi, A, b, dt, dx, U0, npoints, phi_imp )
-    phi     = phi_imp
+    phi_imp =  implicit_conv_1d ( phi_imp, A, b, dt, dx, U0, npoints )
 
 
 plt.plot(x, phi0,   'k-', label='t=0')
